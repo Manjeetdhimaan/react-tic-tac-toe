@@ -2,11 +2,11 @@ import { useState } from 'react';
 
 import Player from './components/Player';
 import GameBoard from './components/GameBoard';
-import { IGameTurn, IPlayer, TGameBoard } from './types/game-board';
-import { WINNING_COMBINATIONS } from './constants/winning-combinations';
 import GameOver from './components/GameOver';
 import Log from './components/Log';
+import { WINNING_COMBINATIONS } from './constants/winning-combinations';
 import { INITIAL_GAME_BOARD, PLAYERS } from './constants/common-constants';
+import { IGameTurn, IPlayer, TGameBoard } from './types/game-board';
 
 const deriveGameBoard = (gameTurns: IGameTurn[]): TGameBoard[] => {
   const gameBoard: TGameBoard[] = [...INITIAL_GAME_BOARD.map((array) => [...array])];
@@ -64,7 +64,7 @@ function App() {
         ...prevTurns
       ]
       return updatedTurns;
-    })
+    });
   }
 
   function handleRestart(): void {

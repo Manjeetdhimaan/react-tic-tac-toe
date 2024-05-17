@@ -1,4 +1,4 @@
-import React, { ChangeEvent, DetailedHTMLProps, InputHTMLAttributes, useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 
 interface PlayerProps {
     isActive: boolean;
@@ -27,35 +27,24 @@ const Player: React.FC<PlayerProps> = ({ isActive, initialName, symbol, onChange
         }
     }
 
-    function handleEnterKey(event: DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>) {
-        const code = (event as KeyboardEvent).code
-        if (code === 'Enter' || !code) {
-            setIsEditing(wasEditing => !wasEditing);
-        }
-
-        if (isEditing) {
-            onChangeName(symbol, playerName);
-            localStorage.setItem(symbol, playerName.toUpperCase());
-        }
-    }
-
     function handleChangeName(event: ChangeEvent<HTMLInputElement>) {
-
         const value = event.target.value;
         setPlayerName(value);
     }
 
     let editablePlayerName = <span className="player-name">{playerName}</span>;
     if (isEditing) {
-        editablePlayerName = <input type="text" required value={playerName} onChange={handleChangeName} onKeyUp={handleEnterKey} />;
+        editablePlayerName = <input type="text" required value={playerName} onChange={handleChangeName} />;
     }
 
     return (
         <li className={isActive ? 'active' : undefined}>
-            <span className="player">
-                {editablePlayerName}
-                <span className="player-symbol">{symbol}</span>
-                <button onClick={handleEdit}>{isEditing ? 'Save' : 'Edit'}</button>
+            <span className="player">\
+                <form onSubmit={handleEdit}>
+                    {editablePlayerName}
+                    <span className="player-symbol">{symbol}</span>
+                    <button onClick={handleEdit} type="button">{isEditing ? 'Save' : 'Edit'}</button>
+                </form>
             </span>
         </li>
     );

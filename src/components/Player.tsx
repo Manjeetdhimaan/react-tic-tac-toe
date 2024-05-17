@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, DetailedHTMLProps, InputHTMLAttributes, useEffect, useState } from "react";
 
 interface PlayerProps {
     isActive: boolean;
@@ -11,18 +11,43 @@ const Player: React.FC<PlayerProps> = ({ isActive, initialName, symbol, onChange
     const [isEditing, setIsEditing] = useState(false);
     const [playerName, setPlayerName] = useState(initialName);
 
+    useEffect(() => {
+        const playerName = localStorage.getItem(symbol);
+        if (playerName) {
+            setPlayerName(playerName.toUpperCase());
+        }
+    }, [symbol]);
+
     function handleEdit() {
         setIsEditing(wasEditing => !wasEditing);
-        if (isEditing) onChangeName(symbol, playerName)
+
+        if (isEditing) {
+            onChangeName(symbol, playerName);
+            localStorage.setItem(symbol, playerName.toUpperCase());
+        }
+    }
+
+    function handleEnterKey(event: DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>) {
+        const code = (event as KeyboardEvent).code
+        if (code === 'Enter' || !code) {
+            setIsEditing(wasEditing => !wasEditing);
+        }
+
+        if (isEditing) {
+            onChangeName(symbol, playerName);
+            localStorage.setItem(symbol, playerName.toUpperCase());
+        }
     }
 
     function handleChangeName(event: ChangeEvent<HTMLInputElement>) {
-        setPlayerName(event.target.value);
+
+        const value = event.target.value;
+        setPlayerName(value);
     }
 
     let editablePlayerName = <span className="player-name">{playerName}</span>;
     if (isEditing) {
-        editablePlayerName = <input type="text" required value={playerName} onChange={handleChangeName} />;
+        editablePlayerName = <input type="text" required value={playerName} onChange={handleChangeName} onKeyUp={handleEnterKey} />;
     }
 
     return (

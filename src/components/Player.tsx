@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, FormEvent, MouseEvent, useEffect, useState } from "react";
 
 interface PlayerProps {
     isActive: boolean;
@@ -18,7 +18,8 @@ const Player: React.FC<PlayerProps> = ({ isActive, initialName, symbol, onChange
         }
     }, [symbol]);
 
-    function handleEdit() {
+    function handleEdit(event: FormEvent<HTMLFormElement> | MouseEvent<HTMLButtonElement>) {
+        event.preventDefault();
         setIsEditing(wasEditing => !wasEditing);
 
         if (isEditing) {

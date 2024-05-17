@@ -39,7 +39,7 @@ const Player: React.FC<PlayerProps> = ({ isActive, initialName, symbol, onChange
 
     return (
         <li className={isActive ? 'active' : undefined}>
-            <span className="player">\
+            <span className="player">
                 <form onSubmit={handleEdit}>
                     {editablePlayerName}
                     <span className="player-symbol">{symbol}</span>

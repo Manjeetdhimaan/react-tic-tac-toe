@@ -188,6 +188,13 @@ ol {
   padding: 1rem;
 }
 
+@media (max-width: 720px) {
+  #game-board button {
+    width: 4rem;
+    height: 4rem;
+  }
+}
+
 #game-over {
   position: absolute;
   top: 0;

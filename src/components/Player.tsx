@@ -15,8 +15,9 @@ const Player: React.FC<PlayerProps> = ({ isActive, initialName, symbol, onChange
         const playerName = localStorage.getItem(symbol);
         if (playerName) {
             setPlayerName(playerName.toUpperCase());
+            onChangeName(symbol, playerName);
         }
-    }, [symbol]);
+    }, [symbol, onChangeName]);
 
     function handleEdit(event: FormEvent<HTMLFormElement> | MouseEvent<HTMLButtonElement>) {
         event.preventDefault();

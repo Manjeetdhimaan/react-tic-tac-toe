@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import Player from './components/Player';
 import GameBoard from './components/GameBoard';
@@ -71,22 +71,29 @@ function App() {
     setGameTurns([]);
   }
 
-  function handlePlayerNameChange(symbol: string, newName: string): void {
-    setPlayers((prevPlayers) => {
-      return {
-        ...prevPlayers,
-        [symbol]: newName
-      }
-    })
-  }
+  // const handlePlayerNameChange = useCallback((symbol: string, newName: string): void => {
+  //   setPlayers((prevPlayers) => {
+  //     return {
+  //       ...prevPlayers,
+  //       [symbol]: newName
+  //     }
+  //   })
+  // }
+
+  const handlePlayerNameChange = useCallback((symbol: string, newName: string) => {
+    setPlayers(prevPlayers => ({
+      ...prevPlayers,
+      [symbol]: newName,
+    }));
+  }, []);
 
   return (
     <>
       <main>
         <div id="game-container">
           <ol id="players" className="highlight-player">
-            <Player isActive={activePlayer === 'X'} initialName='Player 1' symbol='X' onChangeName={handlePlayerNameChange} />
-            <Player isActive={activePlayer === 'O'} initialName='Player 2' symbol='O' onChangeName={handlePlayerNameChange} />
+            <Player isActive={activePlayer === 'X'} initialName={PLAYERS.X} symbol={'X'} onChangeName={handlePlayerNameChange} />
+            <Player isActive={activePlayer === 'O'} initialName={PLAYERS.O} symbol='O' onChangeName={handlePlayerNameChange} />
           </ol>
           {(winner || hasDraw) && <GameOver winner={winner} onRestart={handleRestart} />}
           <GameBoard board={gameBoard} handleSquareClick={handleSquareClick} />

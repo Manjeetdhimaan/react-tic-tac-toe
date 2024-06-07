@@ -45,6 +45,18 @@ const deriveWinner = (gameBoard: TGameBoard[], players: IPlayer): string => {
   return winner as string;
 }
 
+function flatArray<T>(arr: T[], flattenedArray: number[]): number[] {
+  for (const el of arr) {
+    if (typeof el === 'object') {
+      flatArray(el as T[], flattenedArray);
+    }
+    else {
+      flattenedArray.push(el as number);
+    }
+  }
+  return flattenedArray;
+}
+
 function App() {
   const [players, setPlayers] = useState<IPlayer>(PLAYERS);
   const [gameTurns, setGameTurns] = useState<IGameTurn[]>([]);
@@ -55,6 +67,9 @@ function App() {
   const hasDraw: boolean = gameTurns.length === 9 && !winner;
   // const dialog = useRef<{ open: () => void }>(null);
   const { theme, toggleTheme } = useContext(ThemeContext);
+  const flattenedArray: number[] = [];
+  const result = flatArray([1, [3, [4, 50], 0, [9]], [3], 9], flattenedArray);
+  console.log(result);
 
   function handleSquareClick(rowIndex: number, colIndex: number): void {
     setGameTurns((prevTurns) => {

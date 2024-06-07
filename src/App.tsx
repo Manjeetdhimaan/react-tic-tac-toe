@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 
 import Player from './components/Player';
 import GameBoard from './components/GameBoard';
@@ -7,6 +7,7 @@ import Log from './components/Log';
 import { WINNING_COMBINATIONS } from './constants/winning-combinations';
 import { INITIAL_GAME_BOARD, PLAYERS } from './constants/common-constants';
 import { IGameTurn, IPlayer, TGameBoard } from './types/game-board';
+import { ThemeContext } from './context/theme-context';
 
 const deriveGameBoard = (gameTurns: IGameTurn[]): TGameBoard[] => {
   const gameBoard: TGameBoard[] = [...INITIAL_GAME_BOARD.map((array) => [...array])];
@@ -47,32 +48,13 @@ const deriveWinner = (gameBoard: TGameBoard[], players: IPlayer): string => {
 function App() {
   const [players, setPlayers] = useState<IPlayer>(PLAYERS);
   const [gameTurns, setGameTurns] = useState<IGameTurn[]>([]);
-  const [theme, setTheme] = useState<string>('light');
 
   const activePlayer: string = deriveActivePlayer(gameTurns);
   const gameBoard: TGameBoard[] = deriveGameBoard(gameTurns);
   const winner: string = deriveWinner(gameBoard, players);
   const hasDraw: boolean = gameTurns.length === 9 && !winner;
   // const dialog = useRef<{ open: () => void }>(null);
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    setTheme(savedTheme);
-  }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      document.documentElement.setAttribute('data-theme', theme);
-      localStorage.setItem('theme', theme);
-    });
-    return () => {
-      clearTimeout(timer)
-    }
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
-  };
+  const { theme, toggleTheme } = useContext(ThemeContext);
 
   function handleSquareClick(rowIndex: number, colIndex: number): void {
     setGameTurns((prevTurns) => {

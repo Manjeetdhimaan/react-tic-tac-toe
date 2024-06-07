@@ -17,15 +17,29 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
-body {
-  background: radial-gradient(circle at top,
+[data-theme='light'] {
+  --background: radial-gradient(circle at top,
       rgba(241, 210, 70, 0.98),
       rgba(250, 176, 103, 0.87)),
     url('bg-pattern-dark.png');
+  --text-color: #000000;
+}
+
+/* Dark theme */
+[data-theme='dark'] {
+  --background: #000000;
+  --text-color: #ffffff;
+}
+
+body {
+  background: var(--background);
+  color: var(--text-color);
   background-repeat: repeat;
   background-size: 100% 100%, 30% 30%, 100% 100%;
   min-height: 110rem;
+  transition: color 0.3s;
 }
+
 
 header {
   text-align: center;
@@ -198,15 +212,17 @@ ol {
 
 #game-over {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  /* top: 0;
+  left: 0; */
+  width: 60%;
+  height: 90%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: rgba(40, 38, 23, 0.95);
+  z-index: 1000;
+  border: none;
   animation: pop-in 0.5s cubic-bezier(0.68, -0.55, 0.65, 0.52) forwards;
 }
 

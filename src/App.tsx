@@ -1,8 +1,8 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import Player from './components/Player';
 import GameBoard from './components/GameBoard';
-import GameOver from './components/GameOver';
+import GameOverPortal from './components/GameOver';
 import Log from './components/Log';
 import { WINNING_COMBINATIONS } from './constants/winning-combinations';
 import { INITIAL_GAME_BOARD, PLAYERS } from './constants/common-constants';
@@ -47,11 +47,32 @@ const deriveWinner = (gameBoard: TGameBoard[], players: IPlayer): string => {
 function App() {
   const [players, setPlayers] = useState<IPlayer>(PLAYERS);
   const [gameTurns, setGameTurns] = useState<IGameTurn[]>([]);
+  const [theme, setTheme] = useState<string>('light');
 
   const activePlayer: string = deriveActivePlayer(gameTurns);
   const gameBoard: TGameBoard[] = deriveGameBoard(gameTurns);
   const winner: string = deriveWinner(gameBoard, players);
   const hasDraw: boolean = gameTurns.length === 9 && !winner;
+  // const dialog = useRef<{ open: () => void }>(null);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(savedTheme);
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+    });
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+  };
 
   function handleSquareClick(rowIndex: number, colIndex: number): void {
     setGameTurns((prevTurns) => {
@@ -71,16 +92,7 @@ function App() {
     setGameTurns([]);
   }
 
-  // const handlePlayerNameChange = useCallback((symbol: string, newName: string): void => {
-  //   setPlayers((prevPlayers) => {
-  //     return {
-  //       ...prevPlayers,
-  //       [symbol]: newName
-  //     }
-  //   })
-  // }
-
-  const handlePlayerNameChange = useCallback((symbol: string, newName: string) => {
+  const handlePlayerNameChange = useCallback((symbol: string, newName: string): void => {
     setPlayers(prevPlayers => ({
       ...prevPlayers,
       [symbol]: newName,
@@ -89,13 +101,18 @@ function App() {
 
   return (
     <>
+      <button onClick={toggleTheme}>
+        Switch to {theme === 'light' ? 'dark' : 'light'} mode
+      </button>
       <main>
         <div id="game-container">
           <ol id="players" className="highlight-player">
             <Player isActive={activePlayer === 'X'} initialName={PLAYERS.X} symbol={'X'} onChangeName={handlePlayerNameChange} />
             <Player isActive={activePlayer === 'O'} initialName={PLAYERS.O} symbol='O' onChangeName={handlePlayerNameChange} />
           </ol>
-          {(winner || hasDraw) && <GameOver winner={winner} onRestart={handleRestart} />}
+          {/* {(winner || hasDraw) &&  */}
+          {/* {(winner || hasDraw) && <GameOverPortal ref={dialog} winner={winner} onRestart={handleRestart} />} */}
+          <GameOverPortal open={winner || hasDraw} winner={winner} onRestart={handleRestart} />
           <GameBoard board={gameBoard} handleSquareClick={handleSquareClick} />
         </div>
         <Log turns={gameTurns} />

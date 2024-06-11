@@ -14,13 +14,10 @@ interface ThemeProviderProps {
     children: ReactNode;
 }
 
-const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-    const [theme, setTheme] = useState<string>('light');
+const initialTheme = localStorage.getItem('theme') || 'light';
 
-    useEffect(() => {
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        setTheme(savedTheme);
-    }, []);
+const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
+    const [theme, setTheme] = useState<string>(initialTheme);
 
     useEffect(() => {
         document.documentElement.setAttribute('data-theme', theme);
@@ -32,7 +29,7 @@ const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     };
 
     return (
-        <ThemeContext.Provider value={{ theme, toggleTheme }}>
+        <ThemeContext.Provider key={theme} value={{ theme, toggleTheme }}>
             {children}
         </ThemeContext.Provider>
     );

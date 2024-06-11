@@ -5,7 +5,7 @@ import GameBoard from './components/GameBoard';
 import GameOverPortal from './components/GameOver';
 import Log from './components/Log';
 import { WINNING_COMBINATIONS } from './constants/winning-combinations';
-import { INITIAL_GAME_BOARD, PLAYERS } from './constants/common-constants';
+import { INITIAL_GAME_BOARD, PLAYERS, productArray } from './constants/common-constants';
 import { IGameTurn, IPlayer, TGameBoard } from './types/game-board';
 import { ThemeContext } from './context/theme-context';
 

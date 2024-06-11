@@ -71,6 +71,7 @@ function App() {
   const result = flatArray([1, [3, [4, 50], 0, [9]], [3], 9], flattenedArray);
   console.log(result);
 
+
   function handleSquareClick(rowIndex: number, colIndex: number): void {
     setGameTurns((prevTurns) => {
       const activePlayer = deriveActivePlayer(prevTurns);
